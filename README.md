@@ -1,5 +1,7 @@
 # Meu Primeiro Projeto — Portfólio de Engenharia de Software
 
+[![Testes automatizados](https://github.com/gabrielle-software/meu-primeiro-projeto/actions/workflows/tests.yml/badge.svg)](https://github.com/gabrielle-software/meu-primeiro-projeto/actions/workflows/tests.yml)
+
 Repositório com projetos práticos desenvolvidos durante meus estudos de Engenharia de Software. Cada projeto é apresentado de acordo com o código e os recursos realmente disponíveis.
 
 ## Projeto disponível
@@ -19,7 +21,9 @@ Aplicação de linha de comando para praticar lógica de programação, funçõe
 - Python 3
 - JSON
 - `pathlib` para localizar e manipular o arquivo de dados
+- `unittest` para testes automatizados
 - Git e GitHub para versionamento
+- GitHub Actions para integração contínua
 
 ## Como executar
 
@@ -45,17 +49,41 @@ python main.py
 
 No Windows, também é possível usar `py main.py`. Em alguns sistemas Linux, use `python3 main.py`.
 
+## Testes automatizados
+
+O projeto possui **7 testes automatizados** com a biblioteca `unittest`. Eles verificam:
+
+1. Retorno de uma lista vazia quando o arquivo de clientes não existe.
+2. Leitura de registros a partir de um JSON válido.
+3. Tratamento de JSON inválido.
+4. Gravação correta dos registros em JSON.
+5. Cadastro e armazenamento de um cliente pelo menu.
+6. Rejeição de cadastro sem nome.
+7. Listagem de clientes cadastrados.
+
+Para executar os testes localmente:
+
+```bash
+python -m unittest -v
+```
+
+### Integração contínua
+
+O GitHub Actions executa os testes automaticamente em atualizações (*push*) e solicitações de alteração (*pull requests*) direcionadas à branch `main`. O workflow utiliza Python 3.12 e executa `python -m unittest -v`.
+
+O selo no início deste README mostra o status mais recente do workflow. [Consulte as execuções no GitHub Actions](https://github.com/gabrielle-software/meu-primeiro-projeto/actions).
+
 ## Armazenamento e privacidade
 
-Os registros são armazenados localmente no arquivo `customers.json), criado automaticamente quando um cliente é cadastrado. Esse arquivo está listado no `.gitignore` para evitar o envio acidental de dados locais ao GitHub.
+Os registros são armazenados localmente no arquivo `customers.json`, criado automaticamente quando um cliente é cadastrado. Esse arquivo está listado no `.gitignore` para evitar o envio acidental de dados locais ao GitHub.
 
 **Importante:** este projeto é demonstrativo. Não utilize dados pessoais ou informações reais/sensíveis de clientes.
 
 ## Próximas melhorias
 
-- Criar testes automatizados para as funções de cadastro e leitura.
 - Permitir editar e excluir registros.
 - Melhorar a validação dos dados.
+- Ampliar a cobertura dos testes automatizados.
 - Desenvolver projetos adicionais e documentá-los quando estiverem implementados.
 
 ---
@@ -87,7 +115,9 @@ A command-line application built to practice programming logic, functions, data 
 - Python 3
 - JSON
 - `pathlib` for file path handling
+- `unittest` for automated testing
 - Git and GitHub for version control
+- GitHub Actions for continuous integration
 
 ## How to Run
 
@@ -113,6 +143,30 @@ python main.py
 
 On Windows, you can also use `py main.py`. On some Linux systems, use `python3 main.py`.
 
+## Automated Tests
+
+The project includes **7 automated tests** using Python's `unittest` library. They check:
+
+1. Returning an empty list when the customer file does not exist.
+2. Loading records from valid JSON.
+3. Handling invalid JSON.
+4. Saving customer records correctly as JSON.
+5. Adding and saving a customer through the menu.
+6. Rejecting a customer record without a name.
+7. Listing saved customers.
+
+To run the tests locally:
+
+```bash
+python -m unittest -v
+```
+
+### Continuous Integration
+
+GitHub Actions automatically runs the tests on pushes and pull requests targeting the `main` branch. The workflow uses Python 3.12 and runs `python -m unittest -v`.
+
+The badge at the top of this README displays the latest workflow status. [View workflow runs on GitHub Actions](https://github.com/gabrielle-software/meu-primeiro-projeto/actions).
+
 ## Data Storage and Privacy
 
 Customer records are stored locally in `customers.json), which is automatically created when a customer is added. This file is listed in `.gitignore` to help prevent local data from being accidentally pushed to GitHub.
@@ -121,9 +175,9 @@ Customer records are stored locally in `customers.json), which is automatically 
 
 ## Planned Improvements
 
-- Add automated tests for customer creation and data loading.
 - Support editing and deleting customer records.
 - Improve input validation.
+- Expand automated test coverage.
 - Build and document additional projects as they are implemented.
 
 ---
