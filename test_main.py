@@ -37,7 +37,7 @@ class TestCustomerManagement(unittest.TestCase):
 
     def test_main_adds_and_saves_customer(self):
         inputs = ["1", "Maria", "maria@example.com", "0"]
-        with patch("builtins.input", side_effect=inputs), patch("builtins.print"):
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print):
             main.main()
         self.assertEqual(
             main.load_customers(),
@@ -57,6 +57,51 @@ class TestCustomerManagement(unittest.TestCase):
         with patch("builtins.input", side_effect=inputs), patch("builtins.print") as output:
             main.main()
         output.assert_any_call("1. Carlos — carlos@example.com")
+
+    def test_edit_customer_updates_name_and_contact(self):
+        customers = [{"name": "Ana", "contact": "ana@example.com"}]
+        self.assertTrue(main.edit_customer(customers, 1, "Beatriz", "bia@example.com"))
+        self.assertEqual(customers, [{"name": "Beatriz", "contact": "bia@example.com"}])
+
+    def test_edit_customer_rejects_invalid_number(self):
+        customers = [{"name": "Ana", "contact": ""}]
+        self.assertFalse(main.edit_customer(customers, 2, "Beatriz", ""))
+        self.assertEqual(customers[0]["name"], "Ana")
+
+    def test_edit_customer_rejects_blank_name(self):
+        customers = [{"name": "Ana", "contact": ""}]
+        self.assertFalse(main.edit_customer(customers, 1, "   ", None))
+        self.assertEqual(customers[0]["name"], "Ana")
+
+    def test_delete_customer_removes_selected_record(self):
+        customers = [
+            {"name": "Ana", "contact": ""},
+            {"name": "Bruno", "contact": "bruno@example.com"},
+        ]
+        self.assertTrue(main.delete_customer(customers, 1))
+        self.assertEqual(customers, [{"name": "Bruno", "contact": "bruno@example.com"}])
+
+    def test_delete_customer_rejects_invalid_number(self):
+        customers = [{"name": "Ana", "contact": ""}]
+        self.assertFalse(main.delete_customer(customers, 0))
+        self.assertEqual(len(customers), 1)
+
+    def test_main_edits_and_saves_customer(self):
+        main.save_customers([{"name": "Ana", "contact": "ana@example.com"}])
+        inputs = ["3", "1", "Beatriz", "bia@example.com", "0"]
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print"):
+            main.main()
+        self.assertEqual(
+            main.load_customers(),
+            [{"name": "Beatriz", "contact": "bia@example.com"}],
+        )
+
+    def test_main_confirms_and_saves_customer_deletion(self):
+        main.save_customers([{"name": "Ana", "contact": "ana@example.com"}])
+        inputs = ["4", "1", "y", "0"]
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print"):
+            main.main()
+        self.assertEqual(main.load_customers(), [])
 
 
 if __name__ == "__main__":
