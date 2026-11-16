@@ -16,30 +16,42 @@ def is_valid_customer(customer):
 
 
 def load_customers():
-    """Load valid records, safely handling missing or malformed files."""
+    """Load customer records without hiding corrupted or unreadable data."""
     if not DATA_FILE.exists():
         return []
     try:
         data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return []
-    if not isinstance(data, list):
-        return []
-    return [customer for customer in data if is_valid_customer(customer)]
+    except (json.JSONDecodeError, OSError) as exc:
+        raise ValueError(
+            "Customer data could not be read. The original file was not changed."
+        ) from exc
+    if not isinstance(data, list) or any(
+        not is_valid_customer(customer) for customer in data
+    ):
+        raise ValueError(
+            "Customer data is invalid. The original file was not changed."
+        )
+    return data
 
 
 def save_customers(customers):
-    """Persist customer records; return False if writing fails."""
+    """Save through a temporary file so a failed write preserves the original."""
+    temporary_file = DATA_FILE.with_name(DATA_FILE.name + ".tmp")
     try:
-        DATA_FILE.write_text(
+        temporary_file.write_text(
             json.dumps(customers, ensure_ascii=False, indent=2),
             encoding="utf-8",
         )
+        temporary_file.replace(DATA_FILE)
     except (OSError, TypeError, ValueError):
         print("Error: customers could not be saved.")
         return False
+    finally:
+        try:
+            temporary_file.unlink(missing_ok=True)
+        except OSError:
+            pass
     return True
-
 
 def add_customer(customers, name, contact=""):
     """Validate and normalize fields before adding a customer."""
@@ -103,7 +115,12 @@ def read_customer_number(prompt):
 
 
 def main():
-    customers = load_customers()
+    try:
+        customers = load_customers()
+    except ValueError as exc:
+        print(f"Error: {exc}")
+        return
+
     while True:
         print(
             "\n=== Customer Management ==="
