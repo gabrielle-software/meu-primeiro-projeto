@@ -87,7 +87,6 @@ def main():
                 continue
             name = input("New name (leave blank to keep current): ").strip()
             contact = input("New contact (leave blank to keep current): ").strip()
-            current_contact = customers[number - 1].get("contact", "") if 1 <= number <= len(customers) else ""
             if not edit_customer(
                 customers,
                 number,
