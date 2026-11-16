@@ -1,35 +1,63 @@
-"""Simple customer record demo. Do not store real sensitive data."""
+"""Customer management CLI demo. Do not store real sensitive data."""
 import json
 from pathlib import Path
 
 DATA_FILE = Path(__file__).with_name("customers.json")
 
 
+def is_valid_customer(customer):
+    """Check that a record has a non-empty name and a text contact."""
+    return (
+        isinstance(customer, dict)
+        and isinstance(customer.get("name"), str)
+        and bool(customer["name"].strip())
+        and isinstance(customer.get("contact", ""), str)
+    )
+
+
 def load_customers():
+    """Load valid records, safely handling missing or malformed files."""
     if not DATA_FILE.exists():
         return []
     try:
-        customers = json.loads(DATA_FILE.read_text(encoding="utf-8"))
-        return customers if isinstance(customers, list) else []
+        data = json.loads(DATA_FILE.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError):
         return []
+    if not isinstance(data, list):
+        return []
+    return [customer for customer in data if is_valid_customer(customer)]
 
 
 def save_customers(customers):
+    """Persist customer records as readable UTF-8 JSON."""
     DATA_FILE.write_text(
         json.dumps(customers, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
 
 
+def add_customer(customers, name, contact=""):
+    """Validate and normalize fields before adding a customer."""
+    if not isinstance(name, str) or not name.strip():
+        return False
+    if not isinstance(contact, str):
+        return False
+    customers.append({"name": name.strip(), "contact": contact.strip()})
+    return True
+
+
 def edit_customer(customers, customer_number, name=None, contact=None):
     """Edit a customer using its 1-based menu number."""
+    if not isinstance(customer_number, int) or isinstance(customer_number, bool):
+        return False
     index = customer_number - 1
     if index < 0 or index >= len(customers):
         return False
+    if name is not None and (not isinstance(name, str) or not name.strip()):
+        return False
+    if contact is not None and not isinstance(contact, str):
+        return False
     if name is not None:
-        if not name.strip():
-            return False
         customers[index]["name"] = name.strip()
     if contact is not None:
         customers[index]["contact"] = contact.strip()
@@ -38,6 +66,8 @@ def edit_customer(customers, customer_number, name=None, contact=None):
 
 def delete_customer(customers, customer_number):
     """Delete a customer using its 1-based menu number."""
+    if not isinstance(customer_number, int) or isinstance(customer_number, bool):
+        return False
     index = customer_number - 1
     if index < 0 or index >= len(customers):
         return False
@@ -50,7 +80,21 @@ def display_customers(customers):
         print("No customers saved.")
         return
     for number, customer in enumerate(customers, 1):
-        print(f"{number}. {customer['name']} — {customer.get('contact') or 'No contact'}")
+        contact = customer.get("contact") or "No contact"
+        print(f"{number}. {customer['name']} — {contact}")
+
+
+def read_customer_number(prompt):
+    """Read a positive integer selection, or return None if invalid."""
+    try:
+        number = int(input(prompt).strip())
+    except ValueError:
+        print("Enter a valid customer number.")
+        return None
+    if number < 1:
+        print("Customer number must be greater than zero.")
+        return None
+    return number
 
 
 def main():
@@ -66,12 +110,11 @@ def main():
         )
         choice = input("Choose: ").strip()
         if choice == "1":
-            name = input("Name: ").strip()
-            contact = input("Contact (optional): ").strip()
-            if not name:
-                print("Name is required.")
+            name = input("Name: ")
+            contact = input("Contact (optional): ")
+            if not add_customer(customers, name, contact):
+                print("Invalid customer data. A name is required.")
                 continue
-            customers.append({"name": name, "contact": contact})
             save_customers(customers)
             print("Customer saved.")
         elif choice == "2":
@@ -80,20 +123,16 @@ def main():
             display_customers(customers)
             if not customers:
                 continue
-            try:
-                number = int(input("Customer number to edit: ").strip())
-            except ValueError:
-                print("Enter a valid customer number.")
+            number = read_customer_number("Customer number to edit: ")
+            if number is None:
+                continue
+            if number > len(customers):
+                print("Customer number is invalid.")
                 continue
             name = input("New name (leave blank to keep current): ").strip()
             contact = input("New contact (leave blank to keep current): ").strip()
-            if not edit_customer(
-                customers,
-                number,
-                name=name or None,
-                contact=contact or None,
-            ):
-                print("Customer number or name is invalid.")
+            if not edit_customer(customers, number, name=name or None, contact=contact or None):
+                print("Customer data is invalid.")
                 continue
             save_customers(customers)
             print("Customer updated.")
@@ -101,12 +140,10 @@ def main():
             display_customers(customers)
             if not customers:
                 continue
-            try:
-                number = int(input("Customer number to delete: ").strip())
-            except ValueError:
-                print("Enter a valid customer number.")
+            number = read_customer_number("Customer number to delete: ")
+            if number is None:
                 continue
-            if not 1 <= number <= len(customers):
+            if number > len(customers):
                 print("Customer number is invalid.")
                 continue
             confirmation = input("Confirm deletion? (y/n): ").strip().lower()
