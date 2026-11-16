@@ -53,7 +53,7 @@ No Windows, também é possível usar `py main.py`. Em alguns sistemas Linux, us
 
 ## Testes automatizados
 
-O projeto possui **20 testes automatizados** com a biblioteca `unittest`. Eles verificam:
+O projeto possui **21 testes automatizados** com a biblioteca `unittest`. Eles verificam:
 
 1. Retorno de uma lista vazia quando o arquivo de clientes não existe.
 2. Leitura de registros a partir de um JSON válido.
@@ -67,7 +67,7 @@ O projeto possui **20 testes automatizados** com a biblioteca `unittest`. Eles v
 10. Rejeição de nome vazio na edição.
 11. Exclusão de um registro selecionado.
 12. Rejeição de número inválido na exclusão.
-13. Edição e exclusão pelo menu com persistência em JSON.\n14. Ignorar registros malformados.\n15. Rejeitar JSON válido que não seja uma lista.\n16. Remover espaços extras no cadastro.\n17. Rejeitar nome vazio e contato com tipo inválido.\n18. Rejeitar contato inválido na edição.\n19. Rejeitar identificador de cliente que não seja inteiro.\n20. Validar cadastro e persistência pelo menu.
+13. Edição e exclusão pelo menu com persistência em JSON.\n14. Ignorar registros malformados.\n15. Rejeitar JSON válido que não seja uma lista.\n16. Remover espaços extras no cadastro.\n17. Rejeitar nome vazio e contato com tipo inválido.\n18. Rejeitar contato inválido na edição.\n19. Rejeitar identificador de cliente que não seja inteiro.\n20. Validar cadastro e persistência pelo menu.\n21. Rejeitar número de cliente não inteiro ao excluir.
 
 Para executar os testes localmente:
 
@@ -152,7 +152,7 @@ On Windows, you can also use `py main.py`. On some Linux systems, use `python3 m
 
 ## Automated Tests
 
-The project includes **20 automated tests** using Python's `unittest` library. They check:
+The project includes **21 automated tests** using Python's `unittest` library. They check:
 
 1. Returning an empty list when the customer file does not exist.
 2. Loading records from valid JSON.
@@ -166,7 +166,7 @@ The project includes **20 automated tests** using Python's `unittest` library. T
 10. Rejecting a blank customer name when editing.
 11. Deleting a selected customer.
 12. Rejecting an invalid customer number when deleting.
-13. Editing and deleting records through the menu with JSON persistence.\n14. Ignoring malformed records.\n15. Rejecting valid JSON that is not a list.\n16. Trimming whitespace when adding records.\n17. Rejecting blank names and invalid contact types.\n18. Rejecting invalid contact values during editing.\n19. Rejecting non-integer customer identifiers.\n20. Validating customer creation and persistence through the menu.
+13. Editing and deleting records through the menu with JSON persistence.\n14. Ignoring malformed records.\n15. Rejecting valid JSON that is not a list.\n16. Trimming whitespace when adding records.\n17. Rejecting blank names and invalid contact types.\n18. Rejecting invalid contact values during editing.\n19. Rejecting non-integer customer identifiers.\n20. Validating customer creation and persistence through the menu.\n21. Rejecting non-integer customer numbers when deleting.
 
 To run the tests locally:
 
