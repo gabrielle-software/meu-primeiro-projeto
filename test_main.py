@@ -123,5 +123,38 @@ class TestCustomerManagement(unittest.TestCase):
         self.assertEqual(main.load_customers(), [])
 
 
+    def test_save_customers_returns_false_when_write_fails(self):
+        with patch.object(Path, "write_text", side_effect=OSError("disk error")):
+            self.assertFalse(main.save_customers([{"name": "Ana", "contact": ""}]))
+
+    def test_main_does_not_confirm_add_when_save_fails(self):
+        inputs = ["1", "Maria", "maria@example.com", "0"]
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print") as output:
+            with patch.object(Path, "write_text", side_effect=OSError("disk error")):
+                main.main()
+        output.assert_any_call("Error: customers could not be saved.")
+        self.assertEqual(main.load_customers(), [])
+
+    def test_main_does_not_confirm_edit_when_save_fails(self):
+        original = [{"name": "Ana", "contact": "ana@example.com"}]
+        main.save_customers(original)
+        inputs = ["3", "1", "Beatriz", "bia@example.com", "0"]
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print") as output:
+            with patch.object(Path, "write_text", side_effect=OSError("disk error")):
+                main.main()
+        output.assert_any_call("Error: customers could not be saved.")
+        self.assertEqual(main.load_customers(), original)
+
+    def test_main_does_not_confirm_delete_when_save_fails(self):
+        original = [{"name": "Ana", "contact": "ana@example.com"}]
+        main.save_customers(original)
+        inputs = ["4", "1", "y", "0"]
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print") as output:
+            with patch.object(Path, "write_text", side_effect=OSError("disk error")):
+                main.main()
+        output.assert_any_call("Error: customers could not be saved.")
+        self.assertEqual(main.load_customers(), original)
+
+
 if __name__ == "__main__":
     unittest.main()
