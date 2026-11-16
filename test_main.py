@@ -25,26 +25,55 @@ class TestCustomerManagement(unittest.TestCase):
         main.DATA_FILE.write_text(json.dumps(customers), encoding="utf-8")
         self.assertEqual(main.load_customers(), customers)
 
-    def test_load_customers_returns_empty_list_for_invalid_json(self):
-        main.DATA_FILE.write_text("{invalid json", encoding="utf-8")
-        self.assertEqual(main.load_customers(), [])
+    def test_load_customers_rejects_invalid_json_without_changing_file(self):
+        original = "{invalid json"
+        main.DATA_FILE.write_text(original, encoding="utf-8")
+        with self.assertRaises(ValueError):
+            main.load_customers()
+        self.assertEqual(main.DATA_FILE.read_text(encoding="utf-8"), original)
 
-    def test_load_customers_ignores_invalid_records(self):
-        valid = {"name": "Ana", "contact": "ana@example.com"}
-        records = [valid, {"name": " ", "contact": ""}, "not a customer",
-                   {"name": "Bruno", "contact": 123}]
-        main.DATA_FILE.write_text(json.dumps(records), encoding="utf-8")
-        self.assertEqual(main.load_customers(), [valid])
+    def test_load_customers_rejects_invalid_records_without_changing_file(self):
+        records = [{"name": "Ana", "contact": "ana@example.com"}, {"name": " ", "contact": ""}]
+        original = json.dumps(records)
+        main.DATA_FILE.write_text(original, encoding="utf-8")
+        with self.assertRaises(ValueError):
+            main.load_customers()
+        self.assertEqual(main.DATA_FILE.read_text(encoding="utf-8"), original)
 
     def test_load_customers_rejects_non_list_json(self):
         main.DATA_FILE.write_text(json.dumps({"name": "Ana"}), encoding="utf-8")
-        self.assertEqual(main.load_customers(), [])
+        with self.assertRaises(ValueError):
+            main.load_customers()
 
     def test_save_customers_writes_json_file(self):
         customers = [{"name": "João", "contact": "joao@example.com"}]
-        main.save_customers(customers)
+        self.assertTrue(main.save_customers(customers))
         saved = json.loads(main.DATA_FILE.read_text(encoding="utf-8"))
         self.assertEqual(saved, customers)
+
+    def test_save_customers_preserves_original_when_temporary_write_fails(self):
+        original = [{"name": "Ana", "contact": "ana@example.com"}]
+        main.DATA_FILE.write_text(json.dumps(original), encoding="utf-8")
+        with patch.object(Path, "write_text", side_effect=OSError("disk error")):
+            self.assertFalse(main.save_customers([{"name": "Beatriz", "contact": ""}]))
+        self.assertEqual(main.load_customers(), original)
+
+    def test_save_customers_preserves_original_when_replace_fails(self):
+        original = [{"name": "Ana", "contact": "ana@example.com"}]
+        main.DATA_FILE.write_text(json.dumps(original), encoding="utf-8")
+        with patch.object(Path, "replace", side_effect=OSError("replace error")):
+            self.assertFalse(main.save_customers([{"name": "Beatriz", "contact": ""}]))
+        self.assertEqual(main.load_customers(), original)
+        self.assertFalse(main.DATA_FILE.with_name("customers.json.tmp").exists())
+
+    def test_main_stops_when_customer_file_is_corrupted(self):
+        original = "{invalid json"
+        main.DATA_FILE.write_text(original, encoding="utf-8")
+        with patch("builtins.input") as user_input, patch("builtins.print") as output:
+            main.main()
+        user_input.assert_not_called()
+        output.assert_called_once()
+        self.assertEqual(main.DATA_FILE.read_text(encoding="utf-8"), original)
 
     def test_add_customer_trims_fields(self):
         customers = []
