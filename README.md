@@ -13,6 +13,8 @@ Aplicação de linha de comando para praticar lógica de programação, funçõe
 **Funcionalidades**
 - Cadastrar clientes com nome e contato opcional.
 - Listar os clientes cadastrados.
+- Editar o nome e/ou contato de um cliente existente.
+- Excluir um cliente após confirmação no menu.
 - Validar o preenchimento do nome.
 - Salvar e carregar os registros em um arquivo JSON.
 - Tratar situações em que o arquivo ainda não existe ou contém JSON inválido.
@@ -51,7 +53,7 @@ No Windows, também é possível usar `py main.py`. Em alguns sistemas Linux, us
 
 ## Testes automatizados
 
-O projeto possui **7 testes automatizados** com a biblioteca `unittest`. Eles verificam:
+O projeto possui **13 testes automatizados** com a biblioteca `unittest`. Eles verificam:
 
 1. Retorno de uma lista vazia quando o arquivo de clientes não existe.
 2. Leitura de registros a partir de um JSON válido.
@@ -60,6 +62,12 @@ O projeto possui **7 testes automatizados** com a biblioteca `unittest`. Eles ve
 5. Cadastro e armazenamento de um cliente pelo menu.
 6. Rejeição de cadastro sem nome.
 7. Listagem de clientes cadastrados.
+8. Edição de nome e contato.
+9. Rejeição de número inválido na edição.
+10. Rejeição de nome vazio na edição.
+11. Exclusão de um registro selecionado.
+12. Rejeição de número inválido na exclusão.
+13. Edição e exclusão pelo menu com persistência em JSON.
 
 Para executar os testes localmente:
 
@@ -81,7 +89,6 @@ Os registros são armazenados localmente no arquivo `customers.json`, criado aut
 
 ## Próximas melhorias
 
-- Permitir editar e excluir registros.
 - Melhorar a validação dos dados.
 - Ampliar a cobertura dos testes automatizados.
 - Desenvolver projetos adicionais e documentá-los quando estiverem implementados.
@@ -145,7 +152,7 @@ On Windows, you can also use `py main.py`. On some Linux systems, use `python3 m
 
 ## Automated Tests
 
-The project includes **7 automated tests** using Python's `unittest` library. They check:
+The project includes **13 automated tests** using Python's `unittest` library. They check:
 
 1. Returning an empty list when the customer file does not exist.
 2. Loading records from valid JSON.
@@ -154,6 +161,12 @@ The project includes **7 automated tests** using Python's `unittest` library. Th
 5. Adding and saving a customer through the menu.
 6. Rejecting a customer record without a name.
 7. Listing saved customers.
+8. Editing a customer name and contact.
+9. Rejecting an invalid customer number when editing.
+10. Rejecting a blank customer name when editing.
+11. Deleting a selected customer.
+12. Rejecting an invalid customer number when deleting.
+13. Editing and deleting records through the menu with JSON persistence.
 
 To run the tests locally:
 
@@ -175,7 +188,7 @@ Customer records are stored locally in `customers.json), which is automatically 
 
 ## Planned Improvements
 
-- Support editing and deleting customer records.
+- Improve input validation and error messages.
 - Improve input validation.
 - Expand automated test coverage.
 - Build and document additional projects as they are implemented.
