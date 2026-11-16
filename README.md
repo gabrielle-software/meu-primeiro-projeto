@@ -17,7 +17,7 @@ Aplicação de linha de comando para praticar lógica de programação, funçõe
 - Excluir um cliente após confirmação no menu.
 - Validar o preenchimento do nome.
 - Salvar e carregar os registros em um arquivo JSON.
-- Tratar situações em que o arquivo ainda não existe ou contém JSON inválido.
+- Tratar arquivo ausente, JSON inválido e registros malformados.\n- Validar nomes e contatos e remover espaços extras.
 
 **Tecnologias**
 - Python 3
@@ -53,7 +53,7 @@ No Windows, também é possível usar `py main.py`. Em alguns sistemas Linux, us
 
 ## Testes automatizados
 
-O projeto possui **13 testes automatizados** com a biblioteca `unittest`. Eles verificam:
+O projeto possui **20 testes automatizados** com a biblioteca `unittest`. Eles verificam:
 
 1. Retorno de uma lista vazia quando o arquivo de clientes não existe.
 2. Leitura de registros a partir de um JSON válido.
@@ -67,7 +67,7 @@ O projeto possui **13 testes automatizados** com a biblioteca `unittest`. Eles v
 10. Rejeição de nome vazio na edição.
 11. Exclusão de um registro selecionado.
 12. Rejeição de número inválido na exclusão.
-13. Edição e exclusão pelo menu com persistência em JSON.
+13. Edição e exclusão pelo menu com persistência em JSON.\n14. Ignorar registros malformados.\n15. Rejeitar JSON válido que não seja uma lista.\n16. Remover espaços extras no cadastro.\n17. Rejeitar nome vazio e contato com tipo inválido.\n18. Rejeitar contato inválido na edição.\n19. Rejeitar identificador de cliente que não seja inteiro.\n20. Validar cadastro e persistência pelo menu.
 
 Para executar os testes localmente:
 
@@ -152,7 +152,7 @@ On Windows, you can also use `py main.py`. On some Linux systems, use `python3 m
 
 ## Automated Tests
 
-The project includes **13 automated tests** using Python's `unittest` library. They check:
+The project includes **20 automated tests** using Python's `unittest` library. They check:
 
 1. Returning an empty list when the customer file does not exist.
 2. Loading records from valid JSON.
@@ -166,7 +166,7 @@ The project includes **13 automated tests** using Python's `unittest` library. T
 10. Rejecting a blank customer name when editing.
 11. Deleting a selected customer.
 12. Rejecting an invalid customer number when deleting.
-13. Editing and deleting records through the menu with JSON persistence.
+13. Editing and deleting records through the menu with JSON persistence.\n14. Ignoring malformed records.\n15. Rejecting valid JSON that is not a list.\n16. Trimming whitespace when adding records.\n17. Rejecting blank names and invalid contact types.\n18. Rejecting invalid contact values during editing.\n19. Rejecting non-integer customer identifiers.\n20. Validating customer creation and persistence through the menu.
 
 To run the tests locally:
 
@@ -182,7 +182,7 @@ The badge at the top of this README displays the latest workflow status. [View w
 
 ## Data Storage and Privacy
 
-Customer records are stored locally in `customers.json), which is automatically created when a customer is added. This file is listed in `.gitignore` to help prevent local data from being accidentally pushed to GitHub.
+Customer records are stored locally in `\`customers.json\`, which is automatically created when a customer is added. This file is listed in `.gitignore` to help prevent local data from being accidentally pushed to GitHub.
 
 **Important:** this is a demonstration project. Do not use real or sensitive personal/customer information.
 
