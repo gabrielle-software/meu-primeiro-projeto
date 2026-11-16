@@ -12,8 +12,8 @@ Projeto em Python desenvolvido para praticar lógica de programação, funções
 - Excluir clientes após confirmação.
 - Validar dados e remover espaços extras.
 - Carregar dados de um arquivo JSON.
-- Tratar arquivo ausente, JSON inválido e registros malformados.
-- Tratar falhas de gravação sem confirmar operações que não foram salvas.
+- Tratar arquivo ausente e interromper a execução com segurança quando o JSON estiver inválido ou houver registros malformados.
+- Gravar por meio de arquivo temporário para preservar os dados originais em caso de falha.
 
 ## Tecnologias
 
@@ -50,33 +50,36 @@ No Windows, também é possível usar `py main.py`. Em alguns sistemas Linux, us
 
 ## Testes automatizados
 
-O projeto possui **25 testes automatizados** com a biblioteca `unittest`. Eles verificam:
+O projeto possui **28 testes automatizados** com a biblioteca `unittest`. Eles verificam:
 
 1. Retorno de lista vazia quando o arquivo não existe.
 2. Leitura de JSON válido.
-3. Tratamento de JSON inválido.
-4. Ignorar registros malformados.
+3. Rejeição de JSON inválido sem alterar o arquivo original.
+4. Rejeição de registros malformados sem alterar o arquivo original.
 5. Rejeitar JSON válido que não seja uma lista.
 6. Gravação correta em JSON.
-7. Retorno de falha quando a gravação gera erro.
-8. Cadastro com remoção de espaços extras.
-9. Rejeição de nome vazio.
-10. Rejeição de contato com tipo inválido.
-11. Cadastro e persistência pelo menu.
-12. Rejeição de cadastro sem nome pelo menu.
-13. Listagem de clientes pelo menu.
-14. Edição de nome e contato.
-15. Rejeição de número inválido na edição.
-16. Rejeição de nome vazio na edição.
-17. Rejeição de contato inválido na edição.
-18. Exclusão de cliente selecionado.
-19. Rejeição de número inválido na exclusão.
-20. Rejeição de número de cliente que não seja inteiro.
-21. Edição e persistência pelo menu.
-22. Exclusão e persistência pelo menu.
-23. Não confirmar cadastro quando a gravação falha.
-24. Não confirmar edição quando a gravação falha.
-25. Não confirmar exclusão quando a gravação falha.
+7. Preservação do arquivo original quando a gravação temporária falha.
+8. Preservação do arquivo original quando a substituição falha.
+9. Remoção do arquivo temporário após falha na substituição.
+10. Cadastro com remoção de espaços extras.
+11. Rejeição de nome vazio.
+12. Rejeição de contato com tipo inválido.
+13. Interrupção segura do programa quando o arquivo de clientes está corrompido.
+14. Cadastro e persistência pelo menu.
+15. Rejeição de cadastro sem nome pelo menu.
+16. Listagem de clientes pelo menu.
+17. Edição de nome e contato.
+18. Rejeição de número inválido na edição.
+19. Rejeição de nome vazio na edição.
+20. Rejeição de contato inválido na edição.
+21. Exclusão de cliente selecionado.
+22. Rejeição de número inválido na exclusão.
+23. Rejeição de número de cliente que não seja inteiro.
+24. Edição e persistência pelo menu.
+25. Exclusão e persistência pelo menu.
+26. Não confirmar cadastro quando a gravação falha.
+27. Não confirmar edição quando a gravação falha.
+28. Não confirmar exclusão quando a gravação falha.
 
 Para executar os testes localmente:
 
@@ -120,8 +123,8 @@ A Python command-line project created to practice programming logic, functions, 
 - Delete customers after confirmation.
 - Validate input and trim extra whitespace.
 - Load records from a JSON file.
-- Handle missing files, invalid JSON, and malformed records.
-- Handle file-writing errors without confirming operations that were not saved.
+- Handle missing files and stop safely when JSON or customer records are invalid.
+- Use a temporary file when saving to preserve the original data if a write or replacement fails.
 
 ## Technologies
 
@@ -158,33 +161,36 @@ On Windows, you can also use `py main.py`. On some Linux systems, use `python3 m
 
 ## Automated Tests
 
-The project includes **25 automated tests** using Python's `unittest` library. They cover:
+The project includes **28 automated tests** using Python's `unittest` library. They cover:
 
 1. Returning an empty list when the data file is missing.
 2. Loading valid JSON.
-3. Handling invalid JSON.
-4. Ignoring malformed records.
+3. Rejecting invalid JSON without changing the original file.
+4. Rejecting malformed records without changing the original file.
 5. Rejecting valid JSON that is not a list.
 6. Saving records as JSON.
-7. Returning a failure result when writing raises an error.
-8. Trimming whitespace when adding a customer.
-9. Rejecting a blank customer name.
-10. Rejecting a contact value with an invalid type.
-11. Adding and saving a customer through the menu.
-12. Rejecting a customer without a name through the menu.
-13. Listing customers through the menu.
-14. Editing a customer's name and contact.
-15. Rejecting an invalid customer number when editing.
-16. Rejecting a blank name when editing.
-17. Rejecting an invalid contact value when editing.
-18. Deleting a selected customer.
-19. Rejecting an invalid customer number when deleting.
-20. Rejecting a customer number that is not an integer.
-21. Editing and saving through the menu.
-22. Deleting and saving through the menu.
-23. Not confirming an addition when saving fails.
-24. Not confirming an edit when saving fails.
-25. Not confirming a deletion when saving fails.
+7. Preserving the original file when writing the temporary file fails.
+8. Preserving the original file when replacing it fails.
+9. Removing the temporary file after a failed replacement.
+10. Trimming whitespace when adding a customer.
+11. Rejecting a blank customer name.
+12. Rejecting a contact value with an invalid type.
+13. Stopping safely when the customer file is corrupted.
+14. Adding and saving a customer through the menu.
+15. Rejecting a customer without a name through the menu.
+16. Listing customers through the menu.
+17. Editing a customer's name and contact.
+18. Rejecting an invalid customer number when editing.
+19. Rejecting a blank name when editing.
+20. Rejecting an invalid contact value when editing.
+21. Deleting a selected customer.
+22. Rejecting an invalid customer number when deleting.
+23. Rejecting a customer number that is not an integer.
+24. Editing and saving through the menu.
+25. Deleting and saving through the menu.
+26. Not confirming an addition when saving fails.
+27. Not confirming an edit when saving fails.
+28. Not confirming a deletion when saving fails.
 
 Run the tests locally:
 
