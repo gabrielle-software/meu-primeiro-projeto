@@ -37,7 +37,7 @@ class TestCustomerManagement(unittest.TestCase):
 
     def test_main_adds_and_saves_customer(self):
         inputs = ["1", "Maria", "maria@example.com", "0"]
-        with patch("builtins.input", side_effect=inputs), patch("builtins.print):
+        with patch("builtins.input", side_effect=inputs), patch("builtins.print"):
             main.main()
         self.assertEqual(
             main.load_customers(),
