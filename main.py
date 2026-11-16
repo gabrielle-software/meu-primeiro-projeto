@@ -29,11 +29,16 @@ def load_customers():
 
 
 def save_customers(customers):
-    """Persist customer records as readable UTF-8 JSON."""
-    DATA_FILE.write_text(
-        json.dumps(customers, ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+    """Persist customer records; return False if writing fails."""
+    try:
+        DATA_FILE.write_text(
+            json.dumps(customers, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except (OSError, TypeError, ValueError):
+        print("Error: customers could not be saved.")
+        return False
+    return True
 
 
 def add_customer(customers, name, contact=""):
@@ -112,11 +117,13 @@ def main():
         if choice == "1":
             name = input("Name: ")
             contact = input("Contact (optional): ")
-            if not add_customer(customers, name, contact):
+            candidate = [customer.copy() for customer in customers]
+            if not add_customer(candidate, name, contact):
                 print("Invalid customer data. A name is required.")
                 continue
-            save_customers(customers)
-            print("Customer saved.")
+            if save_customers(candidate):
+                customers = candidate
+                print("Customer saved.")
         elif choice == "2":
             display_customers(customers)
         elif choice == "3":
@@ -131,11 +138,13 @@ def main():
                 continue
             name = input("New name (leave blank to keep current): ").strip()
             contact = input("New contact (leave blank to keep current): ").strip()
-            if not edit_customer(customers, number, name=name or None, contact=contact or None):
+            candidate = [customer.copy() for customer in customers]
+            if not edit_customer(candidate, number, name=name or None, contact=contact or None):
                 print("Customer data is invalid.")
                 continue
-            save_customers(customers)
-            print("Customer updated.")
+            if save_customers(candidate):
+                customers = candidate
+                print("Customer updated.")
         elif choice == "4":
             display_customers(customers)
             if not customers:
@@ -148,9 +157,10 @@ def main():
                 continue
             confirmation = input("Confirm deletion? (y/n): ").strip().lower()
             if confirmation == "y":
-                delete_customer(customers, number)
-                save_customers(customers)
-                print("Customer deleted.")
+                candidate = [customer.copy() for customer in customers]
+                if delete_customer(candidate, number) and save_customers(candidate):
+                    customers = candidate
+                    print("Customer deleted.")
             else:
                 print("Deletion cancelled.")
         elif choice == "0":
